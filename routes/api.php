@@ -24,12 +24,15 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function () {
+    Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);    
 });
 
-Route::post('auth/login', [AuthController::class, 'login']);
-Route::get('merchants/report', [ReportController::class, 'getMerchantOmzetReport']);
-Route::get('outlets/report', [ReportController::class, 'getMerchantOutletOmzetReport']);
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('merchants/report', [ReportController::class, 'getMerchantOmzetReport']);
+    Route::get('outlets/report', [ReportController::class, 'getMerchantOutletOmzetReport']);
+});
+
